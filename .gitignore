@@ -84,3 +84,8 @@ lint/tmp/
 # Android Profiling
 *.hprof
 /.idea/inspectionProfiles/Project_Default.xml
+app/src/.DS_Store
+app/.DS_Store
+zoomableimage/src/.DS_Store
+zoomableimage/.DS_Store
+.DS_Store
