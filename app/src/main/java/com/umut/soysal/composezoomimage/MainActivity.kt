@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
             ComposeZoomImageTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                    ImageZoom()
                 }
             }
         }
@@ -33,30 +34,46 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
+fun ImageZoom() {
+    Column(modifier = Modifier
+        .padding(all = 16.dp)
+        .fillMaxSize()) {
 
-    Column(modifier = Modifier.padding(all=16.dp)) {
-        Text(
-            text = "Zoom Compose Image",
-            textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.h5,
-            color = Color.White,
-            modifier = Modifier.padding(all=16.dp)
-        )
+        val painter = rememberImagePainter("https://imgrosetta.mynet.com.tr/file/12220872/12220872-1200x824.jpg")
 
-        val painter = rememberImagePainter("https://maximum.com.tr/content-management/PublishingImages/campaigns/2020-kampanyalar/Temmuz/Boyner_TemmuzKampanyasi_Maximum_280x280.jpg")
+        createImageRow(painter, "Zoom Image URL")
 
-        ZoomableImage(painter = painter,
-            isRotation = false,
-            modifier = Modifier.fillMaxSize())
+        val painterR = painterResource(id = R.drawable.compose)
+
+        createImageRow(painterR, "Zoom Image Res")
     }
 
 }
+
+@Composable
+fun createImageRow(painter: Painter, title: String) {
+    Column {
+        Text(
+            text = title,
+            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.h6,
+            color = Color.White,
+            modifier = Modifier.padding(all = 16.dp)
+        )
+
+        ZoomableImage(
+            painter = painter,
+            isRotation = false,
+            modifier = Modifier.fillMaxWidth().size(250.dp)
+        )
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     ComposeZoomImageTheme {
-        Greeting("Android")
+        ImageZoom()
     }
 }
