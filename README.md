@@ -5,11 +5,11 @@ Jetpack Compose Zoomable Image Android Library
 
 <img src="gif/demo.gif" width="270" height="500"/>
 
-#Usage
+# Usage
 
 ```kotlin
 
- // image url
+ // image url - with coil library
  val painter = rememberImagePainter("https://imgrosetta.mynet.com.tr/file/12220872/12220872-1200x824.jpg")
 
 // resource drawable
