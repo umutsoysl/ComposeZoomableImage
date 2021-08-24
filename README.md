@@ -3,4 +3,4 @@ Jetpack Compose Zoomable Image Android Library
 
 # Gif
 
-<img src="gif/demo.gif" width="300" height="490"/>
+<img src="gif/demo.gif" width="270" height="500"/>
