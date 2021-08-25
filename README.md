@@ -5,6 +5,19 @@ Jetpack Compose Zoomable Image Android Library
 
 <img src="gif/demo.gif" width="270" height="500"/>
 
+
+# Setup
+
+Add Jitpack
+```
+maven { url 'https://jitpack.io' }
+```
+Add the dependency
+```
+implementation 'com.github.umutsoysl:ComposeZoomableImage:1.0.0'
+```
+
+
 # Usage
 
 ```kotlin
