@@ -1,6 +1,8 @@
 # ComposeZoomableImage
 Jetpack Compose Zoomable Image Android Library
 
+Easy zoom in with drag support for Jetpack Compose
+
 # Demo
 
 <img src="gif/demo.gif" width="270" height="500"/>
