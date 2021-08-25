@@ -23,7 +23,8 @@ fun ZoomableImage(
     minScale: Float = 3f,
     contentScale: ContentScale = ContentScale.Fit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-    isRotation: Boolean = false
+    isRotation: Boolean = false,
+    isZoomable: Boolean = true
 ) {
     val scale = remember { mutableStateOf(1f) }
     val rotationState = remember { mutableStateOf(1f) }
@@ -35,23 +36,25 @@ fun ZoomableImage(
             .clip(RectangleShape)
             .background(Color.Transparent)
             .pointerInput(Unit) {
-                forEachGesture {
-                    awaitPointerEventScope {
-                        awaitFirstDown()
-                        do {
-                            val event = awaitPointerEvent()
-                            scale.value *= event.calculateZoom()
-                            if (scale.value > 1) {
-                                val offset = event.calculatePan()
-                                offsetX.value += offset.x
-                                offsetY.value += offset.y
-                                rotationState.value += event.calculateRotation()
-                            } else {
-                                scale.value = 1f
-                                offsetX.value = 1f
-                                offsetY.value = 1f
-                            }
-                        } while (event.changes.any { it.pressed })
+                if (isZoomable) {
+                    forEachGesture {
+                        awaitPointerEventScope {
+                            awaitFirstDown()
+                            do {
+                                val event = awaitPointerEvent()
+                                scale.value *= event.calculateZoom()
+                                if (scale.value > 1) {
+                                    val offset = event.calculatePan()
+                                    offsetX.value += offset.x
+                                    offsetY.value += offset.y
+                                    rotationState.value += event.calculateRotation()
+                                } else {
+                                    scale.value = 1f
+                                    offsetX.value = 1f
+                                    offsetY.value = 1f
+                                }
+                            } while (event.changes.any { it.pressed })
+                        }
                     }
                 }
             }
@@ -64,13 +67,15 @@ fun ZoomableImage(
             modifier = modifier
                 .align(Alignment.Center)
                 .graphicsLayer {
-                    scaleX = maxOf(maxScale, minOf(minScale, scale.value))
-                    scaleY = maxOf(maxScale, minOf(minScale, scale.value))
-                    if (isRotation) {
-                        rotationZ = rotationState.value
+                    if (isZoomable) {
+                        scaleX = maxOf(maxScale, minOf(minScale, scale.value))
+                        scaleY = maxOf(maxScale, minOf(minScale, scale.value))
+                        if (isRotation) {
+                            rotationZ = rotationState.value
+                        }
+                        translationX = offsetX.value
+                        translationY = offsetY.value
                     }
-                    translationX = offsetX.value
-                    translationY = offsetY.value
                 }
         )
     }

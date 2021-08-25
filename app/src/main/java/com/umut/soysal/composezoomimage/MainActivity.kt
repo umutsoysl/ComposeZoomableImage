@@ -64,6 +64,7 @@ fun createImageRow(painter: Painter, title: String) {
         ZoomableImage(
             painter = painter,
             isRotation = false,
+            isZoomable = true,
             modifier = Modifier.fillMaxWidth().size(250.dp)
         )
     }
