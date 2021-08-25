@@ -1,6 +1,8 @@
 # ComposeZoomableImage
 Jetpack Compose Zoomable Image Android Library
 
+Easy zoom in with drag support for Jetpack Compose
+
 # Demo
 
 <img src="gif/demo.gif" width="270" height="500"/>
@@ -14,7 +16,7 @@ maven { url 'https://jitpack.io' }
 ```
 Add the dependency
 ```
-implementation 'com.github.umutsoysl:ComposeZoomableImage:1.0.0'
+implementation 'com.github.umutsoysl:ComposeZoomableImage:0.1.0'
 ```
 
 
