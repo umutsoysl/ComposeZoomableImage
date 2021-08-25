@@ -14,7 +14,7 @@ maven { url 'https://jitpack.io' }
 ```
 Add the dependency
 ```
-implementation 'com.github.umutsoysl:ComposeZoomableImage:1.0.0'
+implementation 'com.github.umutsoysl:ComposeZoomableImage:0.1.0'
 ```
 
 
