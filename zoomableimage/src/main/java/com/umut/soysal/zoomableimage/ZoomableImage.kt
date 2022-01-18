@@ -133,135 +133,138 @@ fun ZoomableImage(
         modifier = modifier
             .clip(RectangleShape)
             .background(MaterialTheme.colorScheme.background)
-            .apply {
-                if (!isZoomable)
-                    return@apply
-
-                pointerInput(Unit) {
-                    detectTapGestures(
-                        onDoubleTap = {
-                            if (scale != 1f) {
-                                scope.launch {
-                                    state.animateZoomBy(1 / scale)
-                                }
-                                offset = Offset.Zero
-                                rotation = 0f
-                            } else {
-                                scope.launch {
-                                    state.animateZoomBy(2f)
-                                }
-                            }
-                        }
-                    )
-                }
-                pointerInput(Unit) {
-                    val panZoomLock = true
-                    forEachGesture {
-                        awaitPointerEventScope {
-                            var transformRotation = 0f
-                            var zoom = 1f
-                            var pan = Offset.Zero
-                            var pastTouchSlop = false
-                            val touchSlop = viewConfiguration.touchSlop
-                            var lockedToPanZoom = false
-                            var drag: PointerInputChange?
-                            var overSlop = Offset.Zero
-
-                            val down = awaitFirstDown(requireUnconsumed = false)
-
-                            var transformEventCounter = 0
-                            do {
-                                val event = awaitPointerEvent()
-                                val canceled = event.changes.fastAny { it.positionChangeConsumed() }
-                                var relevant = true
-                                if (event.changes.size > 1) {
-                                    if (!canceled) {
-                                        val zoomChange = event.calculateZoom()
-                                        val rotationChange = event.calculateRotation()
-                                        val panChange = event.calculatePan()
-
-                                        if (!pastTouchSlop) {
-                                            zoom *= zoomChange
-                                            transformRotation += rotationChange
-                                            pan += panChange
-
-                                            val centroidSize =
-                                                event.calculateCentroidSize(useCurrent = false)
-                                            val zoomMotion = abs(1 - zoom) * centroidSize
-                                            val rotationMotion =
-                                                abs(transformRotation * PI.toFloat() * centroidSize / 180f)
-                                            val panMotion = pan.getDistance()
-
-                                            if (zoomMotion > touchSlop ||
-                                                rotationMotion > touchSlop ||
-                                                panMotion > touchSlop
-                                            ) {
-                                                pastTouchSlop = true
-                                                lockedToPanZoom =
-                                                    panZoomLock && rotationMotion < touchSlop
-                                            }
+            .let { mod ->
+                return@let if (!isZoomable)
+                    mod
+                else
+                    mod
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onDoubleTap = {
+                                    if (scale != 1f) {
+                                        scope.launch {
+                                            state.animateZoomBy(1 / scale)
                                         }
-
-                                        if (pastTouchSlop) {
-                                            val eventCentroid =
-                                                event.calculateCentroid(useCurrent = false)
-                                            val effectiveRotation =
-                                                if (lockedToPanZoom) 0f else rotationChange
-                                            if (effectiveRotation != 0f ||
-                                                zoomChange != 1f ||
-                                                panChange != Offset.Zero
-                                            ) {
-                                                onTransformGesture(
-                                                    eventCentroid,
-                                                    panChange,
-                                                    zoomChange,
-                                                    effectiveRotation
-                                                )
-                                            }
-                                            event.changes.fastForEach {
-                                                if (it.positionChanged())
-                                                    it.consumeAllChanges()
-                                            }
+                                        offset = Offset.Zero
+                                        rotation = 0f
+                                    } else {
+                                        scope.launch {
+                                            state.animateZoomBy(2f)
                                         }
                                     }
-                                } else if (transformEventCounter > 3) relevant = false
-                                transformEventCounter++
-                            } while (!canceled && event.changes.fastAny { it.pressed } && relevant)
-
-                            do {
-                                awaitPointerEvent()
-                                drag = awaitTouchSlopOrCancellation(down.id) { change, over ->
-                                    change.consumePositionChange()
-                                    overSlop = over
                                 }
-                            } while (drag != null && !drag.positionChangeConsumed())
-                            if (drag != null) {
-                                dragOffset = Offset.Zero
-                                if (scale !in 0.92f..1.08f)
-                                    offset += overSlop
-                                else
-                                    dragOffset += overSlop
-                                if (
-                                    drag(drag.id) {
+                            )
+                        }
+                        .pointerInput(Unit) {
+                            val panZoomLock = true
+                            forEachGesture {
+                                awaitPointerEventScope {
+                                    var transformRotation = 0f
+                                    var zoom = 1f
+                                    var pan = Offset.Zero
+                                    var pastTouchSlop = false
+                                    val touchSlop = viewConfiguration.touchSlop
+                                    var lockedToPanZoom = false
+                                    var drag: PointerInputChange?
+                                    var overSlop = Offset.Zero
+
+                                    val down = awaitFirstDown(requireUnconsumed = false)
+
+                                    var transformEventCounter = 0
+                                    do {
+                                        val event = awaitPointerEvent()
+                                        val canceled =
+                                            event.changes.fastAny { it.positionChangeConsumed() }
+                                        var relevant = true
+                                        if (event.changes.size > 1) {
+                                            if (!canceled) {
+                                                val zoomChange = event.calculateZoom()
+                                                val rotationChange = event.calculateRotation()
+                                                val panChange = event.calculatePan()
+
+                                                if (!pastTouchSlop) {
+                                                    zoom *= zoomChange
+                                                    transformRotation += rotationChange
+                                                    pan += panChange
+
+                                                    val centroidSize =
+                                                        event.calculateCentroidSize(useCurrent = false)
+                                                    val zoomMotion = abs(1 - zoom) * centroidSize
+                                                    val rotationMotion =
+                                                        abs(transformRotation * PI.toFloat() * centroidSize / 180f)
+                                                    val panMotion = pan.getDistance()
+
+                                                    if (zoomMotion > touchSlop ||
+                                                        rotationMotion > touchSlop ||
+                                                        panMotion > touchSlop
+                                                    ) {
+                                                        pastTouchSlop = true
+                                                        lockedToPanZoom =
+                                                            panZoomLock && rotationMotion < touchSlop
+                                                    }
+                                                }
+
+                                                if (pastTouchSlop) {
+                                                    val eventCentroid =
+                                                        event.calculateCentroid(useCurrent = false)
+                                                    val effectiveRotation =
+                                                        if (lockedToPanZoom) 0f else rotationChange
+                                                    if (effectiveRotation != 0f ||
+                                                        zoomChange != 1f ||
+                                                        panChange != Offset.Zero
+                                                    ) {
+                                                        onTransformGesture(
+                                                            eventCentroid,
+                                                            panChange,
+                                                            zoomChange,
+                                                            effectiveRotation
+                                                        )
+                                                    }
+                                                    event.changes.fastForEach {
+                                                        if (it.positionChanged())
+                                                            it.consumeAllChanges()
+                                                    }
+                                                }
+                                            }
+                                        } else if (transformEventCounter > 3) relevant = false
+                                        transformEventCounter++
+                                    } while (!canceled && event.changes.fastAny { it.pressed } && relevant)
+
+                                    do {
+                                        awaitPointerEvent()
+                                        drag =
+                                            awaitTouchSlopOrCancellation(down.id) { change, over ->
+                                                change.consumePositionChange()
+                                                overSlop = over
+                                            }
+                                    } while (drag != null && !drag.positionChangeConsumed())
+                                    if (drag != null) {
+                                        dragOffset = Offset.Zero
                                         if (scale !in 0.92f..1.08f)
-                                            offset += it.positionChange()
+                                            offset += overSlop
                                         else
-                                            dragOffset += it.positionChange()
-                                        it.consumePositionChange()
-                                    }
-                                ) {
-                                    if (scale in 0.92f..1.08f) {
-                                        val offsetX = dragOffset.x
-                                        if (offsetX > 300)
-                                            onSwipeRight?.invoke()
-                                        else if (offsetX < -300)
-                                            onSwipeLeft?.invoke()
+                                            dragOffset += overSlop
+                                        if (
+                                            drag(drag.id) {
+                                                if (scale !in 0.92f..1.08f)
+                                                    offset += it.positionChange()
+                                                else
+                                                    dragOffset += it.positionChange()
+                                                it.consumePositionChange()
+                                            }
+                                        ) {
+                                            if (scale in 0.92f..1.08f) {
+                                                val offsetX = dragOffset.x
+                                                if (offsetX > 300)
+                                                    onSwipeRight?.invoke()
+                                                else if (offsetX < -300)
+                                                    onSwipeLeft?.invoke()
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                }
             }
     ) {
         Image(
