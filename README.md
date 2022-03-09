@@ -12,9 +12,7 @@ Fork of [umutsoysl's ComposeZoomableImage](https://github.com/umutsoysl/ComposeZ
 
 # Setup
 
-Clone this repo and use the contens of the file located at 
-```ComposeZoomableImage/zoomableimage/src/main/java/com/umut/soysal/zoomableimage/ZoomableImage.kt```
-
+Clone this repo and use the contens of the [ZoomableImage](https://github.com/joaopegoraro/ComposeZoomableImagePlus/blob/main/zoomableimage/src/main/java/com/umut/soysal/zoomableimage/ZoomableImage.kt) file
 
 # Usage
 
