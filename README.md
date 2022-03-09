@@ -1,7 +1,5 @@
 # ComposeZoomableImage
-Jetpack Compose Zoomable Image Android Library
-
-Easy zoom in with drag support for Jetpack Compose
+Fork of [umutsoysl's ComposeZoomableImage](https://github.com/umutsoysl/ComposeZoomableImage), but with double-tap zoom and support for scrolling.
 
 # Demo
 
