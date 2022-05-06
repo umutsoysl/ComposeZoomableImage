@@ -1,7 +1,9 @@
 # ComposeZoomableImage
-Jetpack Compose Zoomable Image Android Library
+Fork of [umutsoysl's ComposeZoomableImage](https://github.com/umutsoysl/ComposeZoomableImage), but with extra features:
 
-Easy zoom in with drag support for Jetpack Compose
+- Scroll support
+- Double-tap zoom
+- More optional parameters for better vesatility
 
 # Demo
 
@@ -10,30 +12,25 @@ Easy zoom in with drag support for Jetpack Compose
 
 # Setup
 
-Add Jitpack
-```
-maven { url 'https://jitpack.io' }
-```
-Add the dependency
-```
-implementation 'com.github.umutsoysl:ComposeZoomableImage:0.1.0'
-```
-
+Clone this repo and use the contens of the [ZoomableImage](https://github.com/joaopegoraro/ComposeZoomableImagePlus/blob/main/zoomableimage/src/main/java/com/umut/soysal/zoomableimage/ZoomableImage.kt) file
 
 # Usage
 
 ```kotlin
+ // in case you are using a bitmap
+ val painter = BitmapPainter(bitmap)
 
  // image url - with coil library
  val painter = rememberImagePainter("https://imgrosetta.mynet.com.tr/file/12220872/12220872-1200x824.jpg")
 
-// resource drawable
-val painterR = painterResource(id = R.drawable.compose)
+ // resource drawable
+ val painter = painterResource(id = R.drawable.compose)
 
  ZoomableImage(
             painter = painter,
             isRotation = false,
-            modifier = Modifier.fillMaxWidth().size(250.dp)
+            modifier = Modifier.fillMaxWidth().size(250.dp),
+            scrollState = scrollState // if you are using this image inside a scrollable component
         )
 
 ```
