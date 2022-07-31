@@ -1,5 +1,4 @@
 # ComposeZoomableImage
-Fork of [umutsoysl's ComposeZoomableImage](https://github.com/umutsoysl/ComposeZoomableImage), but with extra features:
 
 - Scroll support
 - Double-tap zoom
